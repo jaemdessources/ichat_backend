@@ -9,5 +9,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["./**/*.ts", "src/socket.io.ts"]
+  "include": ["./**/*.ts", "src/index.ts"]
 }

@@ -1,29 +1,21 @@
-import express from "express";
+import { Socket } from "socket.io";
+import { Message } from "./models";
 
-import bodyParser from "body-parser";
-import cors from "cors";
-import helmet from "helmet";
-import morgan from "morgan";
-// import socketHandler from "./socket.io";
-export const app = express();
+const io = require("socket.io")(5000);
 
-// Midlleware
-app.use(bodyParser.json());
-app.use(cors());
-app.use(helmet());
-app.use(morgan("combined"));
-app.use((req, res, next) => {
-  if (true) {
-    console.log("yes");
-    console.log(req.url);
-  }
-  next();
+io.on("connection", (socket: Socket) => {
+  const roomId = socket.handshake.query.roomId;
+  process.env.NODE_ENV !== "production" && console.log("joinged room ", roomId);
+  //each room contains all the clients where
+  //one user is connected
+  socket.join(roomId as string);
+  socket.on("send-message", (data: Message & { recipients: string[] }) => {
+    //for each recipients send the message to their room
+    process.env.NODE_ENV !== "production" && console.log(data.recipients);
+    data.recipients.forEach((id) =>
+      socket.to(id).emit("receive-message", { ...data, recipients: [] })
+    );
+  });
 });
-//routes
 
-//start server
-export const server = require("http").Server(app);
-const port = process.env.PORT || 3001;
-server.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+// io.listen(5000);

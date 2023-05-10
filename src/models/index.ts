@@ -36,12 +36,12 @@ export interface UserAuthInfo {
   rememberUser?: boolean;
 }
 
-export interface ChatMessagesContext {
-  chatMessages: ChatMessages;
-  setChatMessages: React.Dispatch<React.SetStateAction<ChatMessages | undefined>>;
-  isLoading: boolean;
-  error: any;
-}
+// export interface ChatMessagesContext {
+//   chatMessages: ChatMessages;
+//   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessages | undefined>>;
+//   isLoading: boolean;
+//   error: any;
+// }
 
-export type Context<T> =
-  | [T?, React.Dispatch<React.SetStateAction<T | undefined>>?];
+// export type Context<T> =
+//   | [T?, React.Dispatch<React.SetStateAction<T | undefined>>?];
