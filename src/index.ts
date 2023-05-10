@@ -1,7 +1,21 @@
 import { Server, Socket } from "socket.io";
 import { Message } from "./models";
+import http from "http";
+import express from "express";
+import cors from "cors";
 
-const io = new Server();
+const app = express();
+app.use(cors({ origin: "http://localhost:3000" }));
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+const PORT = process.env.PORT || 3001;
+
+app.get("/", (req, res) => {
+  res.write(`<h1>Socket.io start on Port: ${PORT}</h1>`);
+  res.end();
+});
+
+// io.use((socket, next) => {});
 
 io.on("connection", (socket: Socket) => {
   const roomId = socket.handshake.query.roomId;
@@ -18,4 +32,6 @@ io.on("connection", (socket: Socket) => {
   });
 });
 
-io.listen(5000);
+server.listen(PORT, () => {
+  console.log("listening on port", PORT);
+});
