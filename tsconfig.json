@@ -4,7 +4,10 @@
     "module": "commonjs",
     "outDir": "dist",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["./**/*.ts"]
+  "include": ["./**/*.ts", "src/socket.io.ts"]
 }
