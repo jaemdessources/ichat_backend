@@ -1,7 +1,7 @@
-import { Socket } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { Message } from "./models";
 
-const io = require("socket.io")(5000);
+const io = new Server();
 
 io.on("connection", (socket: Socket) => {
   const roomId = socket.handshake.query.roomId;
@@ -18,4 +18,4 @@ io.on("connection", (socket: Socket) => {
   });
 });
 
-// io.listen(5000);
+io.listen(5000);
