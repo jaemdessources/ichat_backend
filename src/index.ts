@@ -5,9 +5,11 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: [/\.vercel\.app$/, "http://localhost:3000"] }));
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, {
+  cors: { origin: [/\.vercel\.app$/, "http://localhost:3000"] },
+});
 const PORT = process.env.PORT || 3001;
 
 app.get("/", (req, res) => {
@@ -15,9 +17,8 @@ app.get("/", (req, res) => {
   res.end();
 });
 
-// io.use((socket, next) => {});
-
 io.on("connection", (socket: Socket) => {
+  console.dir(socket.handshake.headers.origin);
   const roomId = socket.handshake.query.roomId;
   process.env.NODE_ENV !== "production" && console.log("joinged room ", roomId);
   //each room contains all the clients where
