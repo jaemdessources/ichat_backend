@@ -5,17 +5,15 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: /\.vercel\.app$/ }));
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: /\.vercel\.app$/ } });
 const PORT = process.env.PORT || 3001;
 
 app.get("/", (req, res) => {
   res.write(`<h1>Socket.io start on Port: ${PORT}</h1>`);
   res.end();
 });
-
-// io.use((socket, next) => {});
 
 io.on("connection", (socket: Socket) => {
   const roomId = socket.handshake.query.roomId;
