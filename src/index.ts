@@ -21,7 +21,6 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket: Socket) => {
-  console.dir(socket.handshake.headers.origin);
   const roomId = socket.handshake.query.roomId;
   process.env.NODE_ENV !== "production" && console.log("joinged room ", roomId);
   //each room contains all the clients where
