@@ -3,6 +3,9 @@ import { Message } from "./models";
 import http from "http";
 import express from "express";
 import cors from "cors";
+import { config as dotenvConfig } from "dotenv";
+
+dotenvConfig();
 
 const app = express();
 app.use(cors({ origin: [/\.vercel\.app$/, "http://localhost:3000"] }));
