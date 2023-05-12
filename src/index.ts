@@ -2,6 +2,7 @@ import { Server, Socket } from "socket.io";
 import { Message } from "./models";
 import http from "http";
 import express from "express";
+import axios from "../lib/axios";
 import cors from "cors";
 import { config as dotenvConfig } from "dotenv";
 
@@ -21,16 +22,33 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket: Socket) => {
-  const roomId = socket.handshake.query.roomId;
+  const {
+    query: { roomId },
+    auth: { token },
+    headers: { origin },
+  } = socket.handshake;
+
   process.env.NODE_ENV !== "production" && console.log("joinged room ", roomId);
   //each room contains all the clients where
   //one user is connected
   socket.join(roomId as string);
-  socket.on("send-message", (data: Message & { recipients: string[] }) => {
+  socket.on("send-message", (message: Message & { recipients: string[] }) => {
     //for each recipients send the message to their room
-    process.env.NODE_ENV !== "production" && console.log(data.recipients);
-    data.recipients.forEach((id) =>
-      socket.to(id).emit("receive-message", { ...data, recipients: [] })
+    process.env.NODE_ENV !== "production" && console.log(message.recipients);
+    message.recipients.forEach((id) =>
+      socket.to(id).emit("receive-message", message)
+    );
+
+    delete message.recipients;
+
+    axios.post(
+      `${origin}/api/messages`,
+      { message },
+      {
+        headers: {
+          cookie: `accessToken=${token}`,
+        },
+      }
     );
   });
 });
