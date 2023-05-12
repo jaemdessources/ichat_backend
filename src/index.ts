@@ -46,6 +46,7 @@ io.on("connection", (socket: Socket) => {
       { message },
       {
         headers: {
+          Authorization: `Bearer ${process.env.API_ACCESS_TOKEN}`,
           cookie: `accessToken=${token}`,
         },
       }
