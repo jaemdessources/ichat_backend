@@ -5,6 +5,7 @@ import express from "express";
 import axios from "../lib/axios";
 import cors from "cors";
 import { config as dotenvConfig } from "dotenv";
+import { verifyAccessToken } from "./utils/jwt";
 
 dotenvConfig();
 
@@ -31,27 +32,28 @@ io.on("connection", (socket: Socket) => {
   process.env.NODE_ENV !== "production" && console.log("joinged room ", roomId);
   //each room contains all the clients where
   //one user is connected
-  socket.join(roomId as string);
-  socket.on("send-message", (message: Message & { recipients: string[] }) => {
-    //for each recipients send the message to their room
-    process.env.NODE_ENV !== "production" && console.log(message.recipients);
-    message.recipients.forEach((id) =>
-      socket.to(id).emit("receive-message", message)
-    );
+  try {
+    verifyAccessToken(token);
+    socket.join(roomId as string);
+    socket.on("send-message", (message: Message & { recipients: string[] }) => {
+      //for each recipients send the message to their room
+      process.env.NODE_ENV !== "production" && console.log(message.recipients);
+      message.recipients.forEach((id) =>
+        socket.to(id).emit("receive-message", message)
+      );
 
-    delete message.recipients;
+      delete message.recipients;
 
-    axios.post(
-      `${origin}/api/messages`,
-      { message },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.API_ACCESS_TOKEN}`,
-          cookie: `accessToken=${token}`,
-        },
-      }
-    );
-  });
+      axios.post(
+        `${origin}/api/messages`,
+        { message },
+        { headers: { cookie: `accessToken=${token}` } }
+      );
+    });
+  } catch (err) {
+    socket.disconnect();
+    process.env.NODE_ENV !== "production" && console.log(err);
+  }
 });
 
 server.listen(PORT, () => {

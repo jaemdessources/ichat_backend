@@ -1,14 +1,12 @@
-// import { BASE_URL, AXIOS_CONFIG } from "@/utils/constants";
+import { AXIOS_CONFIG } from "../src/utils/constants";
 import axios from "axios";
 
 export default axios.create({
-  //   baseURL: BASE_URL,
-  //   headers: AXIOS_CONFIG.headers,
+  headers: AXIOS_CONFIG.headers,
 });
 
 const axiosPrivate = axios.create({
-  //   baseURL: BASE_URL,
-  //   headers: AXIOS_CONFIG.headers,
+  headers: AXIOS_CONFIG.headers,
   withCredentials: true,
 });
 
