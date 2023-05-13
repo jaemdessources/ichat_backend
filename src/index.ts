@@ -43,7 +43,7 @@ io.on("connection", (socket: Socket) => {
       );
 
       delete message.recipients;
-
+      console.log(socket.handshake.headers);
       axios.post(
         `${origin}/api/messages`,
         { message },
