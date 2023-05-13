@@ -45,7 +45,7 @@ io.on("connection", (socket: Socket) => {
       delete message.recipients;
       console.log(socket.handshake.headers);
       axios.post(
-        `${origin}/api/messages`,
+        `/api/messages`,
         { message },
         { headers: { cookie: `accessToken=${token}` } }
       );
