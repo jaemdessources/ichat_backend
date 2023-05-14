@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from "axios";
 import { config as dotenvConfig } from "dotenv";
-export const BASE_URL = "ichat-l3d8dqxht-jaemdessources.vercel.app";
+export const BASE_URL = process.env.CLIENT_URL;
 dotenvConfig();
 export const AXIOS_CONFIG: AxiosRequestConfig = {
   headers: {

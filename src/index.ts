@@ -44,11 +44,12 @@ io.on("connection", (socket: Socket) => {
 
       delete message.recipients;
       console.log(socket.handshake.headers);
-      axios.post(
+      const request = axios.post(
         `/api/messages`,
         { message },
         { headers: { cookie: `accessToken=${token}` } }
       );
+      request.then((res) => console.log(res));
     });
   } catch (err) {
     socket.disconnect();
