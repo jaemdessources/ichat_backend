@@ -49,7 +49,9 @@ io.on("connection", (socket: Socket) => {
         { message },
         { headers: { cookie: `accessToken=${token}` } }
       );
-      request.then((res) => console.log(res)).catch((res) => console.log(res));
+      request
+        .then(({ data }) => console.log(data))
+        .catch(({ data }) => console.log(data));
     });
   } catch (err) {
     socket.disconnect();
